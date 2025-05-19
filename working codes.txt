@@ -1,0 +1,280 @@
+Signup:
+
+import { useState } from "react";
+import axios from "axios";
+
+export default function Signup() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSignup = async () => {
+    try {
+      await axios.post("http://localhost:5000/api/register", {
+        email,
+        password,
+      });
+      alert("Account created successfully");
+      window.location.href = "/login";
+    } catch (error) {
+      alert("Signup failed: " + error.response.data.error);
+    }
+  };
+
+  return (
+    <div className="auth-container">
+      <h2>Signup</h2>
+      <input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <button onClick={handleSignup}>Signup</button>
+    </div>
+  );
+}
+
+======================================================================
+
+Login:
+
+import { useState } from "react";
+import { auth, googleProvider } from "../firebase";
+import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import "../assets/auth.css";
+
+export default function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  // Email/Password Login
+  const handleLogin = async () => {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      alert("Login successful");
+      window.location.href = "/";
+    } catch (error) {
+      alert("Login failed: " + error.message);
+    }
+  };
+
+  // Google Login
+  const handleGoogleLogin = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      console.log("Google login result:", result);
+      alert("Google login successful");
+      window.location.href = "/";
+    } catch (error) {
+      console.error("Google login error:", error.message);
+      alert("Google login failed: " + error.message);
+    }
+  };
+
+  return (
+    <div className="auth-container">
+      <h2>Login</h2>
+      
+      <input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      
+      <button onClick={handleLogin}>Login</button>
+      
+      <div className="divider">OR</div>
+      
+      <button className="google-btn" onClick={handleGoogleLogin}>
+        Sign in with Google
+      </button>
+    </div>
+  );
+}
+
+
+
+
+======================================================================
+
+server.JS
+
+// backend/server.js
+require("dotenv").config();
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
+const admin = require("firebase-admin");
+const bcrypt = require("bcrypt");
+const app = express();
+const path = require("path");
+
+app.use(cors());
+app.use(express.json());
+
+// Firebase Admin SDK Initialization
+const serviceAccount = require(path.join(__dirname, "firebaseServiceAccountKey.json"));
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+});
+
+// Connect to MongoDB
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log("MongoDB connected"))
+  .catch((err) => console.error("MongoDB connection error:", err));
+
+// User Schema
+const userSchema = new mongoose.Schema({
+  uid: { type: String, unique: true, required: true },
+  email: { type: String, unique: true, required: true },
+  password: { type: String, required: true }
+});
+
+const User = mongoose.model("User", userSchema, "Login-auth");
+
+// Register Route
+app.post("/api/register", async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    console.log("Registering user:", email);
+
+    // Check if user already exists in MongoDB
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      console.warn("User already exists in MongoDB:", email);
+      return res.status(400).json({ error: "Email already registered" });
+    }
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create user in Firebase
+    const userRecord = await admin.auth().createUser({
+      email,
+      password,
+    });
+
+    console.log("Firebase user created:", userRecord.uid);
+
+    // Store user in MongoDB
+    const newUser = new User({
+      uid: userRecord.uid,
+      email,
+      password: hashedPassword
+    });
+
+    await newUser.save();
+    console.log("User saved to MongoDB:", newUser);
+
+    res.json({ message: "Account created successfully!" });
+
+  } catch (err) {
+    console.error("Error in registration:", err);
+
+    if (err.code === "auth/email-already-exists") {
+      res.status(400).json({ error: "Email already registered in Firebase" });
+    } else if (err.code === 11000) {
+      res.status(400).json({ error: "Email already registered in MongoDB" });
+    } else {
+      res.status(500).json({ error: "Server error" });
+    }
+  }
+});
+
+// Login Route
+app.post("/api/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    console.log("Logging in user:", email);
+
+    // Check if user exists in MongoDB
+    const user = await User.findOne({ email });
+    if (!user) {
+      console.warn("User not found in MongoDB:", email);
+      return res.status(400).json({ error: "User not found" });
+    }
+
+    // Verify Firebase User
+    const userRecord = await admin.auth().getUserByEmail(email);
+
+    console.log("Firebase user found:", userRecord.uid);
+
+    // Verify Password
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      console.warn("Invalid password for user:", email);
+      return res.status(400).json({ error: "Invalid credentials" });
+    }
+
+    res.json({ message: "Login successful", uid: userRecord.uid });
+
+  } catch (err) {
+    console.error("Error in login:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+app.listen(process.env.PORT, () => {
+  console.log(`Server running on port ${process.env.PORT}`);
+});
+
+
+===========================================================================
+
+Navbar:
+
+import { Link } from "react-router-dom";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../firebase";
+import Logout from "./logout";
+// import { Link } from "react-router-dom";
+import "../assets/style.css";
+
+export default function Navbar() {
+  return (
+    <nav className="navbar">
+      <h1 className="navbar-title">EventSpark</h1>
+      <div className="navbar-links">
+        {/* <Link to="/">Home</Link>
+        <Link to="/about">About</Link>
+        <Link to="/contact">Contact</Link>
+        <Link to="/login">Login</Link>
+        <Link to="/signup">Signup</Link> */}
+        
+
+        {!user ? (
+        <>
+          <Link to="/">Home</Link>
+          <Link to="/about">About</Link>
+          <Link to="/contact">Contact</Link>
+          <Link to="/login">Login</Link>
+          <Link to="/signup">Sign Up</Link>
+        </>
+      ) : (
+        <Logout />
+      )}
+
+
+      </div>
+    </nav>
+  );
+}
+
+
+
