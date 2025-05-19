@@ -18,7 +18,6 @@ dist-ssr
 
 # Firebase config
 firebase.js
-../backend/firebaseServiceAccountKey.json
 
 # Editor directories and files
 .vscode/*
