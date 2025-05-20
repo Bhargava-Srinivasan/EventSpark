@@ -4,6 +4,7 @@ import EventCard from "../components/EventCard";
 import Testimonials from "../components/Testimonials";
 import StatsCounter from "../components/StatsCounter";
 import SearchBar from "../components/SearchBar";
+import { useEvents } from "../context/EventContext";
 import "../assets/style.css";
 import { useState } from "react";
 
@@ -120,14 +121,12 @@ export const allEvents = [
 
 export default function Home() {
   
-  
-
-
+  const { events } = useEvents();
 
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredEvents = allEvents.filter(event => {
+  const filteredEvents = events.filter(event => {
     const matchesCategory =
       selectedCategory === "All" || event.category === selectedCategory;
 

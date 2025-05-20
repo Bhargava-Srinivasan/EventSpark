@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import "../assets/style.css";
 
 export default function HeroBanner() {
@@ -6,7 +7,8 @@ export default function HeroBanner() {
       <div className="hero-content">
         <h1>Discover & Host Amazing Events</h1>
         <p>From concerts to conferences, find or create events that matter to you.</p>
-        <a href="/create" className="btn-primary">Create an Event</a>
+        {/* <a href="/create" className="btn-primary">Create an Event</a> */}
+        <Link to="/create" className="btn-primary">Create an Event</Link>
       </div>
 
       

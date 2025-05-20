@@ -1,0 +1,51 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Dependency directories
+node_modules/
+
+# Firebase service account key (never commit secrets!)
+firebaseServiceAccountKey.json
+*.json
+
+# Environment variables
+.env
+.env.*
+backend/firebaseServiceAccountKey.json
+
+# Build output
+dist/
+build/
+
+# OS and IDE files
+.DS_Store
+Thumbs.db
+
+# Optional npm cache directory
+.npm/
+
+# VS Code settings
+.vscode/
+
+# Temporary files
+*.swp
+*.swo
+*.tmp
+
+# Logs and debug dumps
+*.out
+*.log
+*.gz
+*.tgz
