@@ -1,3 +1,5 @@
+<div align="center">
+
 # EVENTSPARK
 
 *Ignite Connections, Elevate Experiences, Transform Events*
