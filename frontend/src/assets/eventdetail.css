@@ -1,0 +1,183 @@
+.event-detail-container {
+  display: flex;
+  justify-content: center;
+  padding: 60px 20px;
+  background: linear-gradient(to right, #f9fafb, #f3f4f6);
+}
+
+.event-detail-card {
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+  max-width: 960px;
+  width: 100%;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  transition: transform 0.2s ease;
+}
+
+.event-detail-card:hover {
+  transform: translateY(-2px);
+}
+
+.event-detail-card img {
+  width: 100%;
+  height: 360px;
+  object-fit: cover;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+}
+
+.event-detail-card h2 {
+  font-size: 2.5rem;
+  color: #1f2937;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.event-detail-card p {
+  font-size: 1.1rem;
+  color: #4b5563;
+  line-height: 1.75;
+}
+
+.event-detail-card p strong {
+  color: #111827;
+  font-weight: 600;
+}
+
+.event-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: -10px;
+}
+
+.event-tags span {
+  background-color: #e0e7ff;
+  color: #3730a3;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.creator-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 30px;
+}
+
+.event-detail-card button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.event-detail-card button:hover {
+  transform: translateY(-1px);
+  opacity: 0.95;
+}
+
+.event-detail-card button:nth-child(1) {
+  background: #4f46e5;
+  color: white;
+}
+
+.event-detail-card button:nth-child(2) {
+  background: #ef4444;
+  color: white;
+}
+
+.event-detail-card button:last-child {
+  background: #10b981;
+  color: white;
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .event-detail-card {
+    padding: 24px;
+  }
+
+  .event-detail-card h2 {
+    font-size: 2rem;
+  }
+
+  .event-detail-card img {
+    height: 250px;
+  }
+
+  .creator-actions {
+    flex-direction: column;
+  }
+
+  .event-detail-card button {
+    width: 100%;
+  }
+}
+
+/* Button themes */
+.btn-edit {
+  background-color: #6366f1;
+  color: white;
+}
+
+.creator-actions .btn-delete {
+  background-color: #e91f1f;
+  color: white;
+}
+
+.btn-register {
+  background-color: #10b981;
+  color: white;
+}
+
+/* Hover effects for specific buttons */
+.btn-edit:hover {
+  background-color: #4f46e5;
+}
+
+.btn-delete:hover {
+  background-color: #dc2626;
+}
+
+.btn-register:hover {
+  background-color: #059669;
+}
+
+.event-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background-color: #f1f5f9;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  font-size: 1rem;
+}
+
+.event-meta div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 500;
+  color: #374151;
+}
+
+.event-meta strong {
+  color: #1f2937;
+}
+
+
