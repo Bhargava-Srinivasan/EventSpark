@@ -60,4 +60,29 @@ This project simplifies building dynamic event platforms with features like:
 - 🔒 **Firebase Authentication**: Secure user login and session management.  
 - 🧩 **Modular Components**: Reusable UI elements and centralized state management.  
 - 🌐 **Backend API**: Robust server handling user and event data, with external API integrations for image generation.  
-- 🚀 **Real-time Data & Filtering**: Dynamic event listings with search and category filters for an engaging user experience.  
+- 🚀 **Real-time Data & Filtering**: Dynamic event listings with search and category filters for an engaging user experience.
+
+## 🚀 Installation & Setup
+
+Follow the steps below to run the project locally:
+
+### 1️⃣ Clone the Repository
+```bash
+git clone https://github.com/Bhargava-Srinivasan/EventSpark.git
+cd EventSpark
+```
+
+### 2️⃣ Setup Backend
+
+```bash
+cd backend
+npm install
+node server.js
+```
+
+### 3️⃣ Setup Frontend
+```bash
+cd frontend
+npm install
+npm run dev
+```
